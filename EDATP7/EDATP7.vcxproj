@@ -147,6 +147,7 @@
     <ClInclude Include="..\lib\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\lib\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\src\Display.h" />
+    <ClInclude Include="..\src\Error.h" />
     <ClInclude Include="..\src\Gui.h" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +158,7 @@
     <ClCompile Include="..\lib\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\src\Display.cpp" />
+    <ClCompile Include="..\src\Error.cpp" />
     <ClCompile Include="..\src\Gui.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
   </ItemGroup>
