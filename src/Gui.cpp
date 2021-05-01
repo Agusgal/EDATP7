@@ -8,7 +8,7 @@ Gui::Gui()
 	this->queue = NULL;
 	this->ev = {NULL};
 
-    this->err = lcdError(NO_ERR);
+    this->err = lcdError();
 
     this->displaySizeX = WIDTH;
     this->displaySizeY = HEIGHT;
@@ -124,9 +124,9 @@ void Gui::initAll(void)
         initTimer();
         initEvents();
     }
-    catch (int errCode)
+    catch (errorClass errCode)
     {
-        this->err = lcdError(errCode);
+        this->err.setErrorCode(errCode);
         std::cout << this->err.getErrorDescription() << std::endl;
     }
 
@@ -139,27 +139,27 @@ void Gui::initAllegro(void)
 {
     if (!al_init()) 
     {
-        throw(AL_INIT_ERR);
+        throw(errorClass::AL_INIT_ERR);
     }
 
     if (!al_init_primitives_addon()) 
     {
-        throw(AL_INIT_PRIMITIVES_ERR);
+        throw(errorClass::AL_INIT_PRIMITIVES_ERR);
     }
 
     if (!al_install_keyboard()) 
     {
-        throw(AL_INIT_KEYBOARD_ERR);
+        throw(errorClass::AL_INIT_KEYBOARD_ERR);
     }
 
     if (!al_install_mouse()) 
     {
-        throw(AL_INIT_MOUSE_ERR);
+        throw(errorClass::AL_INIT_MOUSE_ERR);
     }
 
     if (!al_init_image_addon()) 
     {
-        throw(AL_INIT_IMAGE_ERR);
+        throw(errorClass::AL_INIT_IMAGE_ERR);
     }
 }
 
@@ -171,7 +171,7 @@ void Gui::initDisplay(void)
     display = al_create_display(displaySizeX, displaySizeY);
     if (!display) 
     {
-        throw(AL_CREATE_DISPLAY_ERR);
+        throw(errorClass::AL_CREATE_DISPLAY_ERR);
     }
 
     al_set_window_title(display, "Twitter Downloading Interface");
@@ -183,7 +183,7 @@ void Gui::initTimer(void)
     flipTimer = al_create_timer(1 / fps);
     if (!flipTimer)
     {
-        throw(AL_CREATE_TIMER_ERR);
+        throw(errorClass::AL_CREATE_TIMER_ERR);
     }
 }
 
@@ -193,7 +193,7 @@ void Gui::initEvents(void)
 
     if (!queue)
     {
-        throw(AL_CREATE_EVQUEUE_ERR);
+        throw(errorClass::AL_CREATE_EVQUEUE_ERR);
     }
 
  
@@ -237,7 +237,7 @@ bool Gui::isOver(void)
 
 bool Gui::noError(void)
 {
-    if (err.getErrorCode() == NO_ERR)
+    if (err.getErrorCode() == errorClass::NO_ERR)
     {
         return true;
     }
