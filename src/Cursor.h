@@ -1,11 +1,13 @@
 #pragma once
 
-struct cursorPosition
+class cursorPosition
 {
 public:
 	cursorPosition();
 	
-private:
 	int row;
 	int column;
+
+
+private:
 };

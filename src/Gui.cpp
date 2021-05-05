@@ -173,7 +173,8 @@ void Gui::initDisplay(void)
     {
         throw(errorClass::AL_CREATE_DISPLAY_ERR);
     }
-
+    
+    al_set_target_backbuffer(this->display);
     al_set_window_title(display, "Twitter Downloading Interface");
     
 }

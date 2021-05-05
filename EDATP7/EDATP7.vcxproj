@@ -146,11 +146,13 @@
     <ClInclude Include="..\lib\ImGui\imstb_rectpack.h" />
     <ClInclude Include="..\lib\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\lib\ImGui\imstb_truetype.h" />
+    <ClInclude Include="..\src\App.h" />
+    <ClInclude Include="..\src\ConcreteLCD.h" />
     <ClInclude Include="..\src\Cursor.h" />
     <ClInclude Include="..\src\Display.h" />
     <ClInclude Include="..\src\Error.h" />
     <ClInclude Include="..\src\Gui.h" />
-    <ClInclude Include="..\src\Header.h" />
+    <ClInclude Include="..\src\BasicLCD.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\ImGui\imgui.cpp" />
@@ -159,6 +161,9 @@
     <ClCompile Include="..\lib\ImGui\imgui_impl_allegro5.cpp" />
     <ClCompile Include="..\lib\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="..\src\App.cpp" />
+    <ClCompile Include="..\src\BasicLCD.cpp" />
+    <ClCompile Include="..\src\ConcreteLCD.cpp" />
     <ClCompile Include="..\src\Cursor.cpp" />
     <ClCompile Include="..\src\Display.cpp" />
     <ClCompile Include="..\src\Error.cpp" />
