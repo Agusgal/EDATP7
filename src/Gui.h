@@ -13,11 +13,15 @@
 
 #include "Error.h"
 
+#include "Imgui_string.h"
+
 #include <cmath>
 
-#define WIDTH     300
-#define HEIGHT    100
+#define WIDTH     800
+#define HEIGHT    500
 #define FPS       120 
+
+//#define DEMO //to see demo window and implemnt different widgets
 
 class Gui {
 public:
@@ -25,6 +29,7 @@ public:
     Gui();
 
     //Gui Windows
+    void testWindow(void);
     void mainWindow(void);
 
     //Custom addons
@@ -69,6 +74,10 @@ private:
     void initEvents(void);
     void initImGui(void);
 
+    //Draws
+    void refreshImgui(void);
+    void refreshLCDs(void);
+
 
     double displaySizeX;
     double displaySizeY;
@@ -78,6 +87,19 @@ private:
     //Control flags
     bool running;
     bool popupOpen;
+
+    bool openedDisplays[3];
+
+    //ComboBox atributes
+    const char* comboItems[3];
+    int currentItemId;
+    
+    //User input
+    std::string TwitterUsers[3];
+    int TwittN[3];
+
+
+    //Misc
     int test;
 
     //Error

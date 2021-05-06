@@ -18,8 +18,20 @@ Gui::Gui()
     this->popupOpen = false;
 
     this->test = 0;
-}   
 
+    for (int i = 0; i < 3; i++)
+    {
+        this->openedDisplays[i] = false;
+        this->TwitterUsers[i] = "";
+        this->TwittN[i] = 0;
+    }
+
+    this->comboItems[0] = "Display A";
+    this->comboItems[1] = "Display B";
+    this->comboItems[2] = "Display C";
+
+    this->currentItemId = 0;
+}   
 
 
 bool Gui::showMainWindow(void) 
@@ -27,7 +39,7 @@ bool Gui::showMainWindow(void)
     return true;
 }
 
-void Gui::mainWindow(void)
+void Gui::testWindow(void)
 {
     static bool NoTitlebar = false;
     static bool NoMenu = true;
@@ -69,6 +81,87 @@ void Gui::mainWindow(void)
 }
 
 
+void Gui::mainWindow(void)
+{
+    ImGui::SetNextWindowSize(ImVec2(displaySizeX, displaySizeY), ImGuiCond_Always); //Aca pongo tamaño de la pantalla
+    ImGui::Begin("Configure Display", NULL);
+
+    // Child 1 ----> Display generation 
+    {
+        ImGui::BeginChild("ChildL", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, displaySizeY), false);
+        
+        const char* combo_label = comboItems[currentItemId];
+        if (ImGui::BeginCombo("Display Selector", combo_label))
+        {
+            for (int n = 0; n < IM_ARRAYSIZE(comboItems); n++)
+            { 
+                const bool is_selected = (currentItemId == n);
+                if (ImGui::Selectable(comboItems[n], is_selected))
+                {
+                    currentItemId = n;
+                    std::cout << currentItemId << std::endl;
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+        
+        if (ImGui::Button("Create Display"))
+        {
+            //Something that triggers some kind of event
+            openedDisplays[currentItemId] = true;
+            std::cout << "This Button triggers an event to create a new display" << std::endl;
+        }
+        
+  
+        ImGui::EndChild();
+    }
+
+    ImGui::SameLine();
+
+    //Child 2 ----> Display control Tabs
+    {
+        ImGui::BeginChild("ChildR", ImVec2(0, displaySizeY), false);
+        
+        if (ImGui::BeginTabBar("MyTabBar"))
+        {
+            for (int n = 0; n < IM_ARRAYSIZE(openedDisplays); n++)
+                if (openedDisplays[n] && ImGui::BeginTabItem(comboItems[n], &openedDisplays[n], ImGuiTabItemFlags_None))
+                {
+                    
+                    ImGui::Text("This is the %s tab!", comboItems[n]);
+                    
+                    ImGui::myInputText("Enter Twitter User", &TwitterUsers[n]);
+                    ImGui::InputInt("Enter Twitt N", &TwittN[n]);
+
+                    if (ImGui::Button("Download Twitts"))
+                    {
+                        //Something that triggers some kind of event (Twitter download)
+                    }
+
+                    ImGui::SameLine();
+                    if (ImGui::Button("Cancel Download"))
+                    {
+                        //Something that triggers the canceling of the dowload
+                    }
+
+                    ImGui::EndTabItem();
+                }
+            ImGui::EndTabBar();
+        }
+        
+        
+        ImGui::EndChild();
+    }
+
+
+    ImGui::End();
+}
+
+
 void Gui::dispatcher(void)
 {
     ImGui_ImplAllegro5_ProcessEvent(&ev);
@@ -90,29 +183,23 @@ void Gui::dispatcher(void)
 
 bool Gui::getEvent(void)
 {
-    return al_get_next_event(queue, &ev);
+    if (al_get_next_event(queue, &ev))
+    {
+        //if allegro event comes...
+        return true;
+    }
+    else
+    {
+        //Other kind of events...
+        //Can check if user clicked something on the gui. 
+        return false;
+    }
 }
 
 
 void Gui::refresh(void)
 {
-    ImGui_ImplAllegro5_NewFrame();
-    ImGui::NewFrame();
-    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
-
-    mainWindow();
-
-    ImGui::Render();
-
-    al_clear_to_color(al_map_rgba_f(1, 1, 0.8, 1));
-
-    //Todo lo que dibuje aca va a quedar por detrás de las ventanas de DearImGui
-
-    ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
-
-    //Todo lo que dibuje aca va a quedar por encima de las ventanas de DearImGui
-
-    al_flip_display();
+    refreshImgui();
 }
 
 void Gui::initAll(void)
@@ -176,7 +263,6 @@ void Gui::initDisplay(void)
     
     al_set_target_backbuffer(this->display);
     al_set_window_title(display, "Twitter Downloading Interface");
-    
 }
 
 void Gui::initTimer(void)
@@ -247,3 +333,40 @@ bool Gui::noError(void)
         return false;
     }
 }
+
+
+void Gui::refreshImgui(void)
+{
+    al_set_target_backbuffer(display);
+    
+
+    ImGui_ImplAllegro5_NewFrame();
+    ImGui::NewFrame();
+
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(displaySizeX, displaySizeY), ImGuiCond_Always);
+
+
+#ifdef DEMO
+
+    ImGui::ShowDemoWindow();
+
+#else 
+
+    mainWindow();
+
+#endif
+
+    ImGui::Render();
+
+    al_clear_to_color(al_map_rgba_f(1, 1, 0.8, 1));
+
+    //Todo lo que dibuje aca va a quedar por detrás de las ventanas de DearImGui
+
+    ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
+
+    //Todo lo que dibuje aca va a quedar por encima de las ventanas de DearImGui
+
+    al_flip_display();
+}
+
