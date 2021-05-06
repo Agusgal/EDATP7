@@ -19,13 +19,6 @@ Gui::Gui()
 
     this->test = 0;
 
-    for (int i = 0; i < 3; i++)
-    {
-        //this->openedDisplays[i] = false;
-        this->TwitterUsers[i] = "";
-        this->TwittN[i] = 0;
-    }
-
     this->comboItems[0] = "Display A";
     this->comboItems[1] = "Display B";
     this->comboItems[2] = "Display C";
@@ -109,11 +102,9 @@ void Gui::mainWindow(void)
             ImGui::EndCombo();
         }
         
-        if (ImGui::Button("Create Display") )//&& !openedDisplays[currentItemId])
-        {
-            //openedDisplays[currentItemId] = true;
-            openedDisplaysX.push_back(true);
-            
+        bool available = idAvailable(comboItems[currentItemId]);
+        if (ImGui::Button("Create Display") && available)
+        {            
             userInput.push_back(new UserData());
             userInput.back()->setOpen();
             userInput.back()->setId(comboItems[currentItemId]);
@@ -144,10 +135,7 @@ void Gui::mainWindow(void)
         
         if (ImGui::BeginTabBar("MyTabBar"))
         {
-            
-           
-            int a = 0;
-            for (const auto& input : userInput) //int n = 0; n < openedDisplaysX.size(); n++)
+            for (const auto& input : userInput)
                 if (input->isOpen() && ImGui::BeginTabItem(input->getIdNR().c_str(), &(input->getOpenFlag())))
                 {
                     
@@ -337,7 +325,19 @@ void Gui::destroyAll(void)
 
     al_destroy_event_queue(queue);
     al_destroy_display(display);
-    al_shutdown_primitives_addon();
+    //al_shutdown_primitives_addon(); If i put this line when close it throws an error. 
+
+
+    for (auto el : displays)
+    {
+        delete el;
+    }
+
+    for (auto el : userInput)
+    {
+        delete el;
+    }
+
 }
 
 void Gui::resize(void)
@@ -417,3 +417,14 @@ void Gui::refreshLCDs(void)
 }
 
 
+bool Gui::idAvailable(std::string id)
+{
+    for (auto& input : userInput)
+    {
+        if (input->getIdNR() == id)
+        {
+            return false;
+        }
+    }
+    return true;
+}

@@ -23,7 +23,7 @@
 #include <cmath>
 
 #define WIDTH     800
-#define HEIGHT    500
+#define HEIGHT    300
 #define FPS       120 
 
 
@@ -95,20 +95,15 @@ private:
     bool running;
     bool popupOpen;
 
-    std::vector<bool> openedDisplays;
-
     //ComboBox atributes
     const char* comboItems[3];
     int currentItemId;
     
-    //User input
-    std::string TwitterUsers[3];
-    int TwittN[3];
+    bool idAvailable(std::string id);
+
 
     //Displays
     std::vector<basicLCD*> displays;
-    std::vector<bool> openedDisplaysX;
-
     std::vector <UserData*> userInput;
 
     //Misc
