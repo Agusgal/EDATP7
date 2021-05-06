@@ -21,7 +21,7 @@ Gui::Gui()
 
     for (int i = 0; i < 3; i++)
     {
-        this->openedDisplays[i] = false;
+        //this->openedDisplays[i] = false;
         this->TwitterUsers[i] = "";
         this->TwittN[i] = 0;
     }
@@ -109,14 +109,30 @@ void Gui::mainWindow(void)
             ImGui::EndCombo();
         }
         
-        if (ImGui::Button("Create Display"))
+        if (ImGui::Button("Create Display") )//&& !openedDisplays[currentItemId])
         {
-            //Something that triggers some kind of event
-            openedDisplays[currentItemId] = true;
-            std::cout << "This Button triggers an event to create a new display" << std::endl;
+            //openedDisplays[currentItemId] = true;
+            openedDisplaysX.push_back(true);
+            
+            userInput.push_back(new UserData());
+            userInput.back()->setOpen();
+            userInput.back()->setId(comboItems[currentItemId]);
+
+            switch (currentItemId)
+            {
+            case 0:
+                displays.push_back(new LcdA());
+                break;
+            case 1:
+                displays.push_back(new LcdA());
+                break;
+            case 2:
+                displays.push_back(new LcdA());
+                break;
+            default:
+                break;
+            }
         }
-        
-  
         ImGui::EndChild();
     }
 
@@ -128,14 +144,17 @@ void Gui::mainWindow(void)
         
         if (ImGui::BeginTabBar("MyTabBar"))
         {
-            for (int n = 0; n < IM_ARRAYSIZE(openedDisplays); n++)
-                if (openedDisplays[n] && ImGui::BeginTabItem(comboItems[n], &openedDisplays[n], ImGuiTabItemFlags_None))
+            
+           
+            int a = 0;
+            for (const auto& input : userInput) //int n = 0; n < openedDisplaysX.size(); n++)
+                if (input->isOpen() && ImGui::BeginTabItem(input->getIdNR().c_str(), &(input->getOpenFlag())))
                 {
                     
-                    ImGui::Text("This is the %s tab!", comboItems[n]);
+                    ImGui::Text("This is the %s tab!", input->getIdNR().c_str());
                     
-                    ImGui::myInputText("Enter Twitter User", &TwitterUsers[n]);
-                    ImGui::InputInt("Enter Twitt N", &TwittN[n]);
+                    ImGui::myInputText("Enter Twitter User", &(input->getUser()));
+                    ImGui::InputInt("Enter Twitt N", &(input->getTwittN()));
 
                     if (ImGui::Button("Download Twitts"))
                     {
@@ -199,6 +218,7 @@ bool Gui::getEvent(void)
 
 void Gui::refresh(void)
 {
+    refreshLCDs();
     refreshImgui();
 }
 
@@ -247,6 +267,16 @@ void Gui::initAllegro(void)
     if (!al_init_image_addon()) 
     {
         throw(errorClass::AL_INIT_IMAGE_ERR);
+    }
+
+    if (!al_init_font_addon())
+    {
+        throw(errorClass::AL_INIT_FONT_ERR);
+    }
+
+    if (!al_init_ttf_addon())
+    {
+        throw(errorClass::AL_INIT_TTF_ERR);
     }
 }
 
@@ -337,8 +367,7 @@ bool Gui::noError(void)
 
 void Gui::refreshImgui(void)
 {
-    al_set_target_backbuffer(display);
-    
+    al_set_target_bitmap(al_get_backbuffer(display));
 
     ImGui_ImplAllegro5_NewFrame();
     ImGui::NewFrame();
@@ -358,7 +387,7 @@ void Gui::refreshImgui(void)
 #endif
 
     ImGui::Render();
-
+    al_set_target_bitmap(al_get_backbuffer(display));//if i dont write this line the lcd display die xd
     al_clear_to_color(al_map_rgba_f(1, 1, 0.8, 1));
 
     //Todo lo que dibuje aca va a quedar por detrás de las ventanas de DearImGui
@@ -369,4 +398,22 @@ void Gui::refreshImgui(void)
 
     al_flip_display();
 }
+
+
+void Gui::refreshLCDs(void)
+{
+    for (std::size_t n = 0; n < displays.size(); n++)
+    {
+        if (!userInput[n]->isOpen() && displays[n])
+        {
+            delete displays[n];
+            delete userInput[n];
+
+            displays.erase(displays.begin() + n);
+            userInput.erase(userInput.begin() + n);
+            int a = 1;
+        }
+    }
+}
+
 

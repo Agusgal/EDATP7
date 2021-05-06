@@ -25,7 +25,7 @@ public:
 	* que se hubiera tomado de forma de evitar
 	* "resources leak".
 	*=====================================================*/
-	~basicLCD();
+	virtual ~basicLCD();
 
 	/*=====================================================
 	* Name: lcdInitOk
@@ -80,7 +80,7 @@ public:
 	* basicLCD lcd;
 	* lcd << ‘a’ << ‘b’ << ‘c’;
 	*=====================================================*/
-	virtual basicLCD& operator<<(const unsigned char c) = 0;
+	virtual basicLCD& operator<<(const char c) = 0;
 
 	/*=====================================================
 	* Name: operator<<()
@@ -95,7 +95,7 @@ public:
 	* basicLCD lcd;
 	* lcd << “Hola” << “ “ << “Mundo”;
 	*=====================================================*/
-	virtual basicLCD& operator<<(const unsigned char* c) = 0;
+	virtual basicLCD& operator<<(const char* c) = 0;
 
 	/*=====================================================
 	* Name: lcdMoveCursorUp

@@ -150,6 +150,7 @@
     <ClInclude Include="..\src\ConcreteLCD.h" />
     <ClInclude Include="..\src\Cursor.h" />
     <ClInclude Include="..\src\Display.h" />
+    <ClInclude Include="..\src\UserData.h" />
     <ClInclude Include="..\src\Error.h" />
     <ClInclude Include="..\src\Gui.h" />
     <ClInclude Include="..\src\BasicLCD.h" />
@@ -167,10 +168,14 @@
     <ClCompile Include="..\src\ConcreteLCD.cpp" />
     <ClCompile Include="..\src\Cursor.cpp" />
     <ClCompile Include="..\src\Display.cpp" />
+    <ClCompile Include="..\src\UserData.cpp" />
     <ClCompile Include="..\src\Error.cpp" />
     <ClCompile Include="..\src\Gui.cpp" />
     <ClCompile Include="..\src\Imgui_string.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\res\Fonts\courier.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,14 +12,20 @@
 #include <allegro5/allegro_image.h>
 
 #include "Error.h"
+#include "BasicLCD.h"
+#include "ConcreteLCD.h"
 
 #include "Imgui_string.h"
 
+#include "UserData.h"
+
+#include <vector>
 #include <cmath>
 
 #define WIDTH     800
 #define HEIGHT    500
 #define FPS       120 
+
 
 //#define DEMO //to see demo window and implemnt different widgets
 
@@ -58,7 +64,8 @@ public:
     bool isOver(void);
     bool getEvent(void);
     bool noError(void);
-
+    
+    
 
 private:
     //Allegro 
@@ -88,7 +95,7 @@ private:
     bool running;
     bool popupOpen;
 
-    bool openedDisplays[3];
+    std::vector<bool> openedDisplays;
 
     //ComboBox atributes
     const char* comboItems[3];
@@ -98,6 +105,11 @@ private:
     std::string TwitterUsers[3];
     int TwittN[3];
 
+    //Displays
+    std::vector<basicLCD*> displays;
+    std::vector<bool> openedDisplaysX;
+
+    std::vector <UserData*> userInput;
 
     //Misc
     int test;

@@ -18,23 +18,23 @@ LcdA::LcdA()
         {
             throw(errorClass::AL_CREATE_DISPLAY_ERR);
         }
-        al_set_target_backbuffer(this->display);
+        al_set_target_bitmap(al_get_backbuffer(this->display));
 
-        this->font = al_load_font("../Fonts/courier.ttf", 55, NULL);
+        this->font = al_load_font("../res/Fonts/courier.ttf", 55, NULL);
         if (!this->font)
         {
             throw(errorClass::AL_CREATE_FONT_ERR);
         }
 
-        al_clear_to_color(SCREEN_COLOR);
+        al_clear_to_color(al_map_rgb(255, 255, 255));
 
         al_set_window_title(this->display, "LCD A");
 
 
-        //Draws iniitla message and cursor
+        //Draws initial message and cursor
         drawMessage();
         drawCursor();
-
+        al_flip_display();
     }
     catch (errorClass code)
     {
@@ -42,12 +42,10 @@ LcdA::LcdA()
     }
 
 
-
-
 }
 
 LcdA::~LcdA()
-{
+{    
     al_destroy_display(this->display);
     al_destroy_font(this->font);
 }
@@ -108,6 +106,7 @@ bool LcdA::lcdClearToEOL()
 
 basicLCD& LcdA::operator<<(const char c)
 {
+    al_set_target_bitmap(al_get_backbuffer(display));
     int msgId = cursorP.row;
 
     std::string str(1, c);
@@ -123,7 +122,7 @@ basicLCD& LcdA::operator<<(const char c)
     clearScreen();
     drawMessage();
     drawCursor();
-
+    al_flip_display();
 
     return *this;
 }
@@ -267,9 +266,6 @@ void LcdA::drawMessage(void)
 
     al_draw_text(this->font, colorBlack, MSG_X, MSG1_Y, 0, this->messages[0].c_str()); //message 1
     al_draw_text(this->font, colorBlack, MSG_X, MSG2_Y, 0, this->messages[1].c_str()); //message 2
-
-
-
 }
 
 void LcdA::drawCursor(void)
