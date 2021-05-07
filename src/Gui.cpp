@@ -146,7 +146,7 @@ void Gui::mainWindow(void)
 
                     if (ImGui::Button("Download Twitts"))
                     {
-                        //Something that triggers some kind of event (Twitter download)
+                        //Something that triggers Twitter download
                     }
 
                     ImGui::SameLine();
@@ -402,6 +402,7 @@ void Gui::refreshImgui(void)
 
 void Gui::refreshLCDs(void)
 {
+    //if a tab was closed, then we update the program deleting the display and the info. 
     for (std::size_t n = 0; n < displays.size(); n++)
     {
         if (!userInput[n]->isOpen() && displays[n])
