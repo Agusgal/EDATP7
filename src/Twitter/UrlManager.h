@@ -3,9 +3,14 @@
 #include <string>
 #include <curl/curl.h>
 
-class Url
+class UrlManager
 {
 public:
+
+	UrlManager();
+	UrlManager(const char* url);
+	~UrlManager() {}
+
 
 	void setURL(const char* url);
 
@@ -30,10 +35,31 @@ public:
 	bool isStillReceiving();
 
 	bool isOk();
-	
+
+	//urlError getError()
 
 private:
 
-	bool stillReceiving; 
+	//Called on easy and multi perform, contains configurations and options. 
+	bool basicEasyPerform();
+
+	bool basicSetUpMultiPerform();
+
+
+	//urlError ????
+
+	std::string url;
+
+	CURLcode easyR;
+
+	CURLMcode multiR;
+
+	CURL* curl;
+
+	CURLM* multiHandler;
+
+	std::string response;
+
+	int stillReceiving;
 
 };

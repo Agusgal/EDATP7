@@ -99,7 +99,7 @@ bool UrlManager::setUpMultiPerform()
 }
 
 
-bool UrlManager::setUpMultiPerform(const char *header) 
+bool UrlManager::setUpMultiPerform(const char* header)
 {
 	curl = curl_easy_init();
 	multiHandler = curl_multi_init();
@@ -108,7 +108,7 @@ bool UrlManager::setUpMultiPerform(const char *header)
 
 	if (multiHandler != NULL && curl != NULL)
 	{
-		struct curl_slist *list = NULL;
+		struct curl_slist* list = NULL;
 		list = curl_slist_append(list, header);
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
 
@@ -173,7 +173,7 @@ bool UrlManager::basicSetUpMultiPerform()
 	curl_multi_add_handle(multiHandler, curl);
 
 	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);									
+	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
 
 
@@ -187,4 +187,13 @@ bool UrlManager::basicSetUpMultiPerform()
 bool UrlManager::isStillReceiving()
 {
 	return stillReceiving;
+}
+
+static size_t curlCallback(void* contents, size_t size, size_t nmemb, void* userp)
+{
+	size_t realsize = size * nmemb;
+	char* data = (char*)contents;
+	std::string* s = (std::string*)userp;
+	s->append(data, realsize);
+	return realsize;
 }
