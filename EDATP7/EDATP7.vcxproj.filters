@@ -78,6 +78,15 @@
     <ClInclude Include="..\src\Twitter\UrlManager.h">
       <Filter>Source Files\Twitter</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Twitter\TwitterHandler.h">
+      <Filter>Source Files\Twitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Twitter\json.hpp">
+      <Filter>Source Files\Twitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Twitter\Tweet.h">
+      <Filter>Source Files\Twitter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\ImGui\imgui.cpp">
@@ -129,6 +138,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Twitter\UrlManager.cpp">
+      <Filter>Source Files\Twitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Twitter\TwitterHandler.cpp">
+      <Filter>Source Files\Twitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Twitter\Tweet.cpp">
       <Filter>Source Files\Twitter</Filter>
     </ClCompile>
   </ItemGroup>

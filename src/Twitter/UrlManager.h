@@ -38,7 +38,7 @@ public:
 
 	//urlError getError()
 
-private:
+protected:
 
 	//Called on easy and multi perform, contains configurations and options. 
 	bool basicEasyPerform();
