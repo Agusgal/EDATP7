@@ -73,6 +73,15 @@ void Gui::testWindow(void)
  
 }
 
+void Gui::popup(const char* msg)
+{
+    ImGui::OpenPopup("error");
+    if (ImGui::BeginPopup("error")) 
+    {
+        ImGui::Text(msg);
+        ImGui::EndPopup();
+    }
+}
 
 void Gui::mainWindow(void)
 {
@@ -103,7 +112,8 @@ void Gui::mainWindow(void)
         }
         
         bool available = idAvailable(comboItems[currentItemId]);
-        if (ImGui::Button("Create Display") && available)
+        bool createDisp = ImGui::Button("Create Display");
+        if (createDisp && available)
         {            
             userInput.push_back(new UserData());
             userInput.back()->setOpen();
@@ -123,6 +133,11 @@ void Gui::mainWindow(void)
             default:
                 break;
             }
+        }
+        else if (createDisp && !available)
+        {
+            std::string error = "Display Already created";
+            popup(error.c_str());
         }
         ImGui::EndChild();
     }
