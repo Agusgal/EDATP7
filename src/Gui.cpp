@@ -17,6 +17,8 @@ Gui::Gui()
 	this->queue = NULL;
 	this->ev = {NULL};
 
+    this->rollVar = timeRollInit;
+
     this->requestTimer = NULL;
     this->requestEv = { NULL };
 
@@ -205,6 +207,33 @@ void Gui::mainWindow(void)
                         this->nextEvent = events::CANCELREQUEST;
                     }
 
+                    if (ImGui::Button("Next Tweet"))
+                    {
+                        genericEventComes = true;
+                        this->displayInUSe = getCurrentDisplay(input->getIdNR());
+                        this->nextEvent = events::NEXT;
+                    }
+
+                    ImGui::SameLine();
+                    if (ImGui::Button("Previous Tweet"))
+                    {
+                        genericEventComes = true;
+                        this->displayInUSe = getCurrentDisplay(input->getIdNR());
+                        this->nextEvent = events::PREVIOUS;
+                    }
+
+                    
+                    ImGui::SliderFloat("Roll Speed", &rollVar, minTimeRoll, maxTimeRoll, "%.3f");
+                    al_set_timer_speed(rollTimer, (double)rollVar);
+
+
+                    if (ImGui::Button("Close Display"))
+                    {
+                        genericEventComes = true;
+                        this->displayInUSe = getCurrentDisplay(input->getIdNR());
+                        this->nextEvent = events::CLOSE;
+                    }
+
                     ImGui::EndTabItem();
                 }
             ImGui::EndTabBar();
@@ -262,10 +291,31 @@ void Gui::dispatcher(void)
             if (!displays[displayInUSe]->lcdClear())
                 throw std::exception("Failed to clear LCD.");
             rollTwitts = false;
-            loadState = state::TCLoaded;
+            loadState = state::TCnotLoaded;
             break;
         case events::ROLL:
             roll();
+            break;
+        case events::NEXT:
+            if (loadState == state::TweetsRequested)
+            {
+                showNextTweet();
+            }
+            break;
+        case events::PREVIOUS:
+            if (loadState == state::TweetsRequested)
+            {
+                showPreviousTweet();
+            }
+            break;
+        case events::CLOSE:
+            delete displays[displayInUSe];
+            delete userInput[displayInUSe];
+
+            displays.erase(displays.begin() + displayInUSe);
+            userInput.erase(userInput.begin() + displayInUSe);
+            rollTwitts = false;
+            loadState = state::TCnotLoaded;
             break;
         default:
             break;
@@ -516,7 +566,6 @@ void Gui::refreshLCDs(void)
 
             displays.erase(displays.begin() + n);
             userInput.erase(userInput.begin() + n);
-            int a = 1;
         }
     }
 }
@@ -596,15 +645,36 @@ void Gui::performRequest(std::string displayId)
     try { 
         while (going)
         {
+            if (al_get_next_event(queue, &ev))
+            {
+                allegroEventComes = true;
+            }
+            
+            
             //Checks if there's been a timer event.
             if (al_get_next_event(queue, &requestEv))
             {
                 loading(sign, id);
             }
+            
+            if (allegroEventComes)
+            {
+                ImGui_ImplAllegro5_ProcessEvent(&ev);
+                if ((ev.type == ALLEGRO_EVENT_TIMER) && (ev.timer.source == flipTimer))
+                {
+                    refreshImgui();
+                    allegroEventComes = false;
+                }
+            }
+
 
             going = tClient->requestTweet();
 
             if (this->nextEvent == events::CANCELREQUEST)
+            {
+                going = false;
+            }
+            else if (this->nextEvent == events::CLOSE)
             {
                 going = false;
             }
@@ -732,6 +802,37 @@ void Gui::showNextTweet()
     }
     catch (std::exception&) 
     {
+        return;
+    }
+}
+
+
+//Shows previous tweet (if there is one).
+void Gui::showPreviousTweet()
+{
+    try 
+    {
+        //Does nothing if there isn't a previous tweet.
+        if (tweetNumber <= 0) 
+        {
+            return;
+        }
+
+        //Shows previous tweet and updates tweetNumber.
+        else {
+            tweetNumber--;
+            if (!displays[displayInUSe]->lcdClear())
+                throw std::exception("Failed to clear LCD.");
+            displays[displayInUSe]->lcdMoveCursorUp();
+            *displays[displayInUSe] << (char*)tClient->getTweets()[tweetNumber].getDate().c_str();
+
+            displays[displayInUSe]->lcdMoveCursorDown();
+            *displays[displayInUSe] << (char*)tClient->getTweets()[tweetNumber].getContent().c_str();
+            rollTwitts = true;
+            positionRoll = 0;
+        }
+    }
+    catch (std::exception&) {
         return;
     }
 }

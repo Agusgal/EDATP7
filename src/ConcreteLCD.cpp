@@ -70,10 +70,9 @@ lcdError& LcdA::lcdGetError()
 
 bool LcdA::lcdClear()
 {
-
-
-    this->messages[0] = "                ";
-    this->messages[1] = "                ";
+    al_set_target_backbuffer(display);
+    this->messages[0] = "";
+    this->messages[1] = "";
 
     this->cursorP.row = 0;
     this->cursorP.column = 0;
@@ -82,7 +81,7 @@ bool LcdA::lcdClear()
     drawMessage();
     drawCursor();
 
-
+    al_flip_display();
     return true;
 }
 

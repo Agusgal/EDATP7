@@ -31,7 +31,7 @@
 #define FPS       120 
 
 
-enum class events{IDLE, REQUEST, CANCELREQUEST, ROLL};
+enum class events{IDLE, REQUEST, CANCELREQUEST, ROLL, NEXT, PREVIOUS, CLOSE};
 
 enum class state{TCnotLoaded, TCLoaded, TweetsRequested};
 
@@ -129,11 +129,14 @@ private:
     int getCurrentDisplay(std::string Id);
     bool rollTwitts;
     unsigned int positionRoll;
+
+    float rollVar;
     
     //showtweets
     void roll(void);
     unsigned int tweetNumber;
     void showNextTweet();
+    void showPreviousTweet();
 
     //States
     state loadState;
