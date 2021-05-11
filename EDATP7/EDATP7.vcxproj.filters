@@ -84,10 +84,10 @@
     <ClInclude Include="..\src\Twitter\API_Request_err.h">
       <Filter>Source Files\Twitter</Filter>
     </ClInclude>
-    <ClInclude Include="micholcd.h">
+    <ClInclude Include="allegro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="allegro.h">
+    <ClInclude Include="..\src\micholcd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -146,10 +146,10 @@
     <ClCompile Include="..\src\Twitter\API_Request_err.cpp">
       <Filter>Source Files\Twitter</Filter>
     </ClCompile>
-    <ClCompile Include="micholcd.cpp">
+    <ClCompile Include="allegro.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="allegro.cpp">
+    <ClCompile Include="..\src\micholcd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

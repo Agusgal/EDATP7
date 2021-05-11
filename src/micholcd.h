@@ -3,10 +3,13 @@
 #define MICHO_H
 #include <string>
 #include <iostream>
-#include "allegro.h"
+#include "allegro5/allegro.h"
+#include "allegro5/allegro_font.h"
+#include "allegro5/allegro_ttf.h"
+#include <allegro5/allegro_primitives.h>
 #include "basicLCD.h"
 
-#define FONTPATHMICHO "fuentemicho.TTF"
+#define FONTPATHMICHO "../res/Fonts/fuentemicho.TTF"
 #define MAX 32
 
 class micholcd :public basicLCD {
