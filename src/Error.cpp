@@ -67,9 +67,14 @@ void lcdError::setErrorCode(errorClass code)
 		this->description = "Failed to create Allegro event queue!";
 		break;
 
+	case errorClass::MOVEMENT_ERR:
+		this->name = "Movement Error";
+		this->description = "Not able to move the cursor!";
+		break;
 	case errorClass::NO_ERR:
 		this->name = "No Error";
 		this->description = "No Error";
+		break;
 	default:
 		this->name = "Unspecified Error";
 		this->description = "Unspecified Error";

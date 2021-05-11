@@ -14,6 +14,7 @@
 #include "Error.h"
 #include "BasicLCD.h"
 #include "ConcreteLCD.h"
+#include "lcd3.h"
 
 #include "Imgui_string.h"
 

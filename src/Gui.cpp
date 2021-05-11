@@ -161,7 +161,7 @@ void Gui::mainWindow(void)
                 displays.push_back(new LcdA());
                 break;
             case 2:
-                displays.push_back(new LcdA());
+                displays.push_back(new LCD3());
                 break;
             default:
                 break;

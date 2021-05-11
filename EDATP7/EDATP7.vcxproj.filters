@@ -84,6 +84,9 @@
     <ClInclude Include="..\src\Twitter\API_Request_err.h">
       <Filter>Source Files\Twitter</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\lcd3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\ImGui\imgui.cpp">
@@ -139,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="..\src\Twitter\API_Request_err.cpp">
       <Filter>Source Files\Twitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lcd3.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
