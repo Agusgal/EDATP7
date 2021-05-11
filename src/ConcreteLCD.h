@@ -33,8 +33,8 @@ public:
 	virtual bool lcdClear();
 	virtual bool lcdClearToEOL();
 
-	virtual basicLCD& operator<<(const char c);
-	virtual basicLCD& operator<<(const char* c);
+	virtual basicLCD& operator<< (const char c);
+	virtual basicLCD& operator<< (const char* c);
 
 	virtual bool lcdMoveCursorUp();
 	virtual bool lcdMoveCursorDown();

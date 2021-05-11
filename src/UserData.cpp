@@ -72,5 +72,13 @@ std::string UserData::getIdNR(void)
 	return displayId;
 }
 
+std::string UserData::getUserNR(void)
+{
+	return this->twitterUser;
+}
 
+int UserData::getTwittNR(void)
+{
+	return this->twittN;
+}
 

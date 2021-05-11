@@ -5,20 +5,20 @@
 class Tweet
 {
 public:
-	Tweet();
-	Tweet(std::string tweet, std::string twitter, std::string tweetedAt);
+	Tweet(std::string username, std::string content, std::string date);
 	~Tweet();
 
-	std::string getTweet();
-	std::string getTwitter();
-	std::string getTweetedAt();
+	std::string getUser();
+	std::string getContent();
+	std::string getDate();
 
-	void setTweet(std::string tweet_);
-	void setTwitter(std::string twitter_);
-	void setTweetedAt(std::string tweetedAt_);
+	//orinting for debugging
+	friend std::ostream& operator <<(std::ostream& o, const Tweet& tw);
 
 private:
-	std::string tweet;
-	std::string twitter;
-	std::string tweetedAt;
+	std::string username;
+	std::string content;
+	std::string date;
+
+	void ParseCharacters();
 };

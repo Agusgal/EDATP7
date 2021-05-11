@@ -9,8 +9,8 @@ LcdA::LcdA()
         this->error = lcdError();
 
 
-        this->messages[0] = "                ";
-        this->messages[1] = "                ";
+        this->messages[0] = "";
+        this->messages[1] = "";
 
 
         this->display = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
@@ -89,6 +89,7 @@ bool LcdA::lcdClear()
 
 bool LcdA::lcdClearToEOL()
 {
+    al_set_target_backbuffer(display);
 
     int linesToClear = 16 - cursorP.column;
     std::string emptyStr(linesToClear, ' ');
@@ -98,6 +99,8 @@ bool LcdA::lcdClearToEOL()
     clearScreen();
     drawMessage();
     drawCursor();
+
+    al_flip_display();
 
     return true;
 }
@@ -129,22 +132,25 @@ basicLCD& LcdA::operator<<(const char c)
 
 basicLCD& LcdA::operator<<(const char* c)
 {
+    al_set_target_bitmap(al_get_backbuffer(display));
+    
     int msgId = cursorP.row;
 
     std::string str = c;
 
+    messages[msgId] = c;
 
-    if (messages[msgId][cursorP.column] == ' ')
+    /*if (messages[msgId][cursorP.column] == ' ')
     {
         messages[msgId].replace(cursorP.column, str.length(), str);
         cursorP.column += 1;
-    }
+    }*/
 
 
     clearScreen();
     drawMessage();
     drawCursor();
-
+    al_flip_display();
 
     return *this;
 }
@@ -236,6 +242,8 @@ cursorPosition LcdA::lcdGetCursorPosition()
 
 bool LcdA::lcdSetCursorPosition(const cursorPosition pos)
 {
+    al_set_target_backbuffer(display);
+
     int column = pos.column;
     int row = pos.row;
 
@@ -257,6 +265,7 @@ bool LcdA::lcdSetCursorPosition(const cursorPosition pos)
         return false;
     }
 
+    al_flip_display();
     return true;
 }
 

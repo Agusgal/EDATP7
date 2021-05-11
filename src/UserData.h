@@ -22,6 +22,8 @@ public:
 	bool& getOpenFlag(void);
 
 	std::string getIdNR(void);
+	std::string getUserNR(void);
+	int getTwittNR(void);
 
 	bool isOpen(void);
 

@@ -149,11 +149,10 @@
     <ClInclude Include="..\src\App.h" />
     <ClInclude Include="..\src\ConcreteLCD.h" />
     <ClInclude Include="..\src\Cursor.h" />
-    <ClInclude Include="..\src\Display.h" />
+    <ClInclude Include="..\src\Twitter\API_Request_err.h" />
     <ClInclude Include="..\src\Twitter\json.hpp" />
     <ClInclude Include="..\src\Twitter\Tweet.h" />
     <ClInclude Include="..\src\Twitter\TwitterHandler.h" />
-    <ClInclude Include="..\src\Twitter\UrlManager.h" />
     <ClInclude Include="..\src\UserData.h" />
     <ClInclude Include="..\src\Error.h" />
     <ClInclude Include="..\src\Gui.h" />
@@ -171,10 +170,9 @@
     <ClCompile Include="..\src\BasicLCD.cpp" />
     <ClCompile Include="..\src\ConcreteLCD.cpp" />
     <ClCompile Include="..\src\Cursor.cpp" />
-    <ClCompile Include="..\src\Display.cpp" />
+    <ClCompile Include="..\src\Twitter\API_Request_err.cpp" />
     <ClCompile Include="..\src\Twitter\Tweet.cpp" />
     <ClCompile Include="..\src\Twitter\TwitterHandler.cpp" />
-    <ClCompile Include="..\src\Twitter\UrlManager.cpp" />
     <ClCompile Include="..\src\UserData.cpp" />
     <ClCompile Include="..\src\Error.cpp" />
     <ClCompile Include="..\src\Gui.cpp" />

@@ -17,7 +17,11 @@
 
 #include "Imgui_string.h"
 
+
+#include "Twitter/TwitterHandler.h"
 #include "UserData.h"
+
+#include "Twitter/API_Request_err.h"
 
 #include <vector>
 #include <cmath>
@@ -25,6 +29,11 @@
 #define WIDTH     800
 #define HEIGHT    300
 #define FPS       120 
+
+
+enum class events{IDLE, REQUEST, CANCELREQUEST, ROLL};
+
+enum class state{TCnotLoaded, TCLoaded, TweetsRequested};
 
 
 //#define DEMO //to see demo window and implemnt different widgets
@@ -58,7 +67,7 @@ public:
 
     //Dispatcher
     void dispatcher(void);
-
+    events checkGuiEvent(void);
 
     //Setters and getters
     bool isOver(void);
@@ -74,6 +83,13 @@ private:
     ALLEGRO_EVENT_QUEUE* queue;
     ALLEGRO_EVENT ev;
     ALLEGRO_TIMER* flipTimer;
+
+
+    ALLEGRO_TIMER* requestTimer;
+    ALLEGRO_EVENT requestEv;
+
+    ALLEGRO_TIMER* rollTimer;
+
 
     void initAllegro(void);
     void initDisplay(void);
@@ -105,10 +121,35 @@ private:
     //Displays
     std::vector<basicLCD*> displays;
     std::vector <UserData*> userInput;
+    TwitterHandler* tClient;
+    int displayInUSe;
 
     //Misc
     int test;
+    int getCurrentDisplay(std::string Id);
+    bool rollTwitts;
+    unsigned int positionRoll;
+    
+    //showtweets
+    void roll(void);
+    unsigned int tweetNumber;
+    void showNextTweet();
+
+    //States
+    state loadState;
+    events nextEvent;
+    bool allegroEventComes;
+    bool genericEventComes;
 
     //Error
     lcdError err;
+
+    //PArsers
+
+    void parseToClient(const char* username, int tweetN, std::string displayId);
+    void performRequest(std::string displayId);
+
+    void loading(int& sign, int id);
+
+
 };

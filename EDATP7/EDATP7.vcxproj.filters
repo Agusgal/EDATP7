@@ -51,9 +51,6 @@
     <ClInclude Include="..\src\Gui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Display.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -75,9 +72,6 @@
     <ClInclude Include="..\src\UserData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Twitter\UrlManager.h">
-      <Filter>Source Files\Twitter</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Twitter\TwitterHandler.h">
       <Filter>Source Files\Twitter</Filter>
     </ClInclude>
@@ -85,6 +79,9 @@
       <Filter>Source Files\Twitter</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Twitter\Tweet.h">
+      <Filter>Source Files\Twitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Twitter\API_Request_err.h">
       <Filter>Source Files\Twitter</Filter>
     </ClInclude>
   </ItemGroup>
@@ -113,9 +110,6 @@
     <ClCompile Include="..\src\Gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Display.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -137,13 +131,13 @@
     <ClCompile Include="..\src\UserData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Twitter\UrlManager.cpp">
-      <Filter>Source Files\Twitter</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Twitter\TwitterHandler.cpp">
       <Filter>Source Files\Twitter</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Twitter\Tweet.cpp">
+      <Filter>Source Files\Twitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Twitter\API_Request_err.cpp">
       <Filter>Source Files\Twitter</Filter>
     </ClCompile>
   </ItemGroup>

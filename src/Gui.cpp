@@ -1,5 +1,14 @@
 #include "Gui.h"
 
+namespace 
+{
+    const int loadingDotsNumber = 3;
+    const double timeDots = 0.1;
+    const double timeRollInit = 0.15;
+
+    const double minTimeRoll = 0.08;
+    const double maxTimeRoll = 0.3;
+}
 
 Gui::Gui()
 {
@@ -8,7 +17,12 @@ Gui::Gui()
 	this->queue = NULL;
 	this->ev = {NULL};
 
+    this->requestTimer = NULL;
+    this->requestEv = { NULL };
+
     this->err = lcdError();
+
+    this->rollTimer = NULL;
 
     this->displaySizeX = WIDTH;
     this->displaySizeY = HEIGHT;
@@ -19,11 +33,28 @@ Gui::Gui()
 
     this->test = 0;
 
+    this->tweetNumber = 0;
+
     this->comboItems[0] = "Display A";
     this->comboItems[1] = "Display B";
     this->comboItems[2] = "Display C";
 
     this->currentItemId = 0;
+    this->rollTwitts = false;
+    this->positionRoll = 0;
+
+    this->allegroEventComes = false;
+    this->genericEventComes = false;
+
+    this->displayInUSe = NULL;
+
+    //Better in initgui
+    this->tClient = new (std::nothrow) TwitterHandler;
+    this->tClient->init();
+    if (!tClient)
+        throw std::exception("Failed to allocate memory for Twitter client.");
+
+    this->loadState = state::TCnotLoaded;
 }   
 
 
@@ -161,13 +192,17 @@ void Gui::mainWindow(void)
 
                     if (ImGui::Button("Download Twitts"))
                     {
-                        //Something that triggers Twitter download
+                        genericEventComes = true;
+                        this->displayInUSe = getCurrentDisplay(input->getIdNR());
+                        nextEvent = events::REQUEST;
                     }
 
                     ImGui::SameLine();
                     if (ImGui::Button("Cancel Download"))
                     {
-                        //Something that triggers the canceling of the dowload
+                        genericEventComes = true;
+                        this->displayInUSe = getCurrentDisplay(input->getIdNR());
+                        this->nextEvent = events::CANCELREQUEST;
                     }
 
                     ImGui::EndTabItem();
@@ -186,20 +221,56 @@ void Gui::mainWindow(void)
 
 void Gui::dispatcher(void)
 {
-    ImGui_ImplAllegro5_ProcessEvent(&ev);
-    switch (ev.type)
+    if (allegroEventComes)
     {
-    case ALLEGRO_EVENT_TIMER:
-        this->refresh();
-        break;
-    case ALLEGRO_EVENT_DISPLAY_CLOSE:
-        running = false;
-        break;
-    case ALLEGRO_EVENT_DISPLAY_RESIZE:
-        this->resize();
-        break;
-    default:
-        break;
+        ImGui_ImplAllegro5_ProcessEvent(&ev);
+        switch (ev.type)
+        {
+        case ALLEGRO_EVENT_TIMER:
+            if (ev.timer.source == flipTimer)
+            {
+                this->refresh();
+                break;
+            }
+            else if ((ev.timer.source == rollTimer) && rollTwitts)
+            {
+                this->roll();
+                break;
+            }
+            break;
+        case ALLEGRO_EVENT_DISPLAY_CLOSE:
+            running = false;
+            break;
+        case ALLEGRO_EVENT_DISPLAY_RESIZE:
+            this->resize();
+            break;
+        default:
+            break;
+        }
+        allegroEventComes = false;
+    }
+    else if (genericEventComes)
+    {
+        switch (nextEvent)
+        {
+        case events::REQUEST:
+            tweetNumber = 0;
+            parseToClient(userInput[displayInUSe]->getUserNR().c_str(), userInput[displayInUSe]->getTwittNR(), userInput[displayInUSe]->getIdNR());
+            performRequest(userInput[displayInUSe]->getIdNR());
+            break;
+        case events::CANCELREQUEST:
+            if (!displays[displayInUSe]->lcdClear())
+                throw std::exception("Failed to clear LCD.");
+            rollTwitts = false;
+            loadState = state::TCLoaded;
+            break;
+        case events::ROLL:
+            roll();
+            break;
+        default:
+            break;
+        }
+        genericEventComes = false;
     }
 }
 
@@ -207,13 +278,15 @@ bool Gui::getEvent(void)
 {
     if (al_get_next_event(queue, &ev))
     {
-        //if allegro event comes...
+        allegroEventComes = true;
+        return true;
+    }
+    else if (genericEventComes)
+    {
         return true;
     }
     else
     {
-        //Other kind of events...
-        //Can check if user clicked something on the gui. 
         return false;
     }
 }
@@ -241,6 +314,7 @@ void Gui::initAll(void)
     }
 
     al_start_timer(flipTimer);
+    al_start_timer(rollTimer);
     initImGui();
 
 }
@@ -305,6 +379,19 @@ void Gui::initTimer(void)
     {
         throw(errorClass::AL_CREATE_TIMER_ERR);
     }
+
+    requestTimer = al_create_timer(timeDots);
+    if (!requestTimer)
+    {
+        throw(errorClass::AL_CREATE_TIMER_ERR);
+    }
+
+    rollTimer = al_create_timer(timeRollInit);
+    if (!rollTimer)
+    {
+        throw(errorClass::AL_CREATE_TIMER_ERR);
+    }
+
 }
 
 void Gui::initEvents(void)
@@ -322,6 +409,9 @@ void Gui::initEvents(void)
     al_register_event_source(queue, al_get_mouse_event_source());
 
     al_register_event_source(queue, al_get_timer_event_source(flipTimer));
+    al_register_event_source(queue, al_get_timer_event_source(requestTimer));
+
+    al_register_event_source(queue, al_get_timer_event_source(rollTimer));
     
 }
 
@@ -340,7 +430,6 @@ void Gui::destroyAll(void)
 
     al_destroy_event_queue(queue);
     al_destroy_display(display);
-    //al_shutdown_primitives_addon(); If i put this line when close it throws an error. 
 
 
     for (auto el : displays)
@@ -443,4 +532,206 @@ bool Gui::idAvailable(std::string id)
         }
     }
     return true;
+}
+
+int Gui::getCurrentDisplay(std::string displayId)
+{
+    for (int n = 0; n < userInput.size(); n++)
+    {
+        if (userInput[n]->getIdNR() == displayId)
+        {
+            return n; 
+        }
+    }
+}
+
+
+
+void Gui::parseToClient(const char* username, int tweetN, std::string displayId)
+{
+    
+    int id = getCurrentDisplay(displayId);
+
+    try {
+        tClient->newUsername(username);
+
+        if (tweetN)
+        {
+            tClient->newtweetCount(tweetN);
+        }
+
+       
+        if (!displays[id]->lcdClear())
+        {
+            throw std::exception("Failed to clear LCD.");
+        }
+        *displays[id] << username;
+       
+
+        loadState = state::TCLoaded;
+    }
+    catch (API_request_error& e) 
+    {
+       
+        if (!displays[id]->lcdClear())
+        {
+            throw std::exception("Failed to clear LCD.");
+        }
+        *displays[id] << (char*)e.what();
+    }
+}
+
+
+void Gui::performRequest(std::string displayId)
+{
+    int id = getCurrentDisplay(displayId);
+    
+
+    //Sets variables to use in function.
+    bool going = true;
+
+    int sign = 0;
+    al_start_timer(requestTimer);
+    //Attempts to set timer resources.
+    try { 
+        while (going)
+        {
+            //Checks if there's been a timer event.
+            if (al_get_next_event(queue, &requestEv))
+            {
+                loading(sign, id);
+            }
+
+            going = tClient->requestTweet();
+
+            if (this->nextEvent == events::CANCELREQUEST)
+            {
+                going = false;
+            }
+        }
+        //Destroys timer resources.
+        al_stop_timer(this->requestTimer);
+
+        //Clears LCD and writes first tweet's date and content.
+        if (!displays[getCurrentDisplay(displayId)]->lcdClear())
+        {
+            throw std::exception("Failed to clear LCD");
+        }
+        if (tClient->getTweets().size()) 
+        {
+            std::cout << tClient->getTweets()[0].getUser() << std::endl;
+                
+            *displays[id] << (char*)tClient->getTweets()[0].getDate().c_str();
+            displays[id]->lcdMoveCursorDown();
+            *displays[id] << (char*)tClient->getTweets()[0].getContent().c_str();
+            loadState = state::TweetsRequested;
+                
+            //Roll the twitts
+            rollTwitts = true;
+            positionRoll = 0;
+        }
+        else 
+        {
+            *displays[id] << (char*)"No tweets.";
+            loadState = state::TCnotLoaded;
+        }
+        
+    }
+    catch (API_request_error& e)
+    {
+        if (!displays[id]->lcdClear())
+            throw std::exception("Failed to clear LCD");
+        *displays[id] << (char*)e.what();
+    }
+}
+
+void Gui::loading(int& sign, int id)
+{
+    cursorPosition temp;
+    temp.row = 1;
+    temp.column = 0;
+
+    if (!sign)
+    {
+        if (!displays[id]->lcdSetCursorPosition(temp))
+        {
+            throw std::exception("Failed to set cursor's position.");
+        }
+        if (!displays[id]->lcdClearToEOL())
+        {
+            throw std::exception("Failed to clear to EOL in LCD.");
+        }
+
+        *displays[id] << (char*)"Requesting";
+    }
+    else
+    {
+        *displays[id] << (char)'.';
+
+        if (sign == loadingDotsNumber)
+        {
+            sign = -1;
+        }
+    }
+    sign++;
+}
+
+void Gui::roll(void) 
+{
+    unsigned int totTweets = tClient->getTweets().size();
+    if (totTweets && tweetNumber < totTweets) 
+    {
+        std::string tweet = tClient->getTweets()[tweetNumber].getContent();
+
+        if (positionRoll < tweet.length())
+        {
+            cursorPosition temp; 
+            temp.row = 1; 
+            temp.column = 0;
+            
+            if (!displays[displayInUSe]->lcdSetCursorPosition(temp))
+                throw std::exception("Failed to set cursor position.");
+            
+            std::string strToShow = tweet.substr(positionRoll, tweet.size());
+            *displays[displayInUSe] << (char*)strToShow.c_str();
+            positionRoll++;
+        }
+        else
+        {
+            showNextTweet();
+        }
+    }
+}
+
+//Shows next tweet or shows error message in lcd if there are no more tweets.
+void Gui::showNextTweet() 
+{
+    try 
+    {
+        //Notice of last tweet.
+        if (tweetNumber >= (tClient->getTweets().size() - 1)) 
+        {
+            tweetNumber = tClient->getTweets().size();
+            if (!displays[displayInUSe]->lcdClear())
+                throw std::exception("Failed to clear LCD");
+            *displays[displayInUSe] << (char*)"No more tweets.";
+        }
+        else //Shows next tweet and updates tweetNumber.
+        {
+            tweetNumber++;
+            if (!displays[displayInUSe]->lcdClear())
+                throw std::exception("Failed to clear LCD");
+            displays[displayInUSe]->lcdMoveCursorUp();
+            *displays[displayInUSe] << (char*)tClient->getTweets()[tweetNumber].getDate().c_str();
+
+            displays[displayInUSe]->lcdMoveCursorDown();
+            *displays[displayInUSe] << (char*)tClient->getTweets()[tweetNumber].getContent().c_str();
+            rollTwitts = true;
+            positionRoll = 0;
+        }
+    }
+    catch (std::exception&) 
+    {
+        return;
+    }
 }
