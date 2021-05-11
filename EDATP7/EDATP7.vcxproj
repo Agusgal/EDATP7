@@ -149,7 +149,6 @@
     <ClInclude Include="..\src\App.h" />
     <ClInclude Include="..\src\ConcreteLCD.h" />
     <ClInclude Include="..\src\Cursor.h" />
-    <ClInclude Include="..\src\micholcd.h" />
     <ClInclude Include="..\src\Twitter\API_Request_err.h" />
     <ClInclude Include="..\src\Twitter\json.hpp" />
     <ClInclude Include="..\src\Twitter\Tweet.h" />
@@ -160,6 +159,7 @@
     <ClInclude Include="..\src\basicLCD.h" />
     <ClInclude Include="..\src\Imgui_string.h" />
     <ClInclude Include="allegro.h" />
+    <ClInclude Include="micholcd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\ImGui\imgui.cpp" />
@@ -172,7 +172,6 @@
     <ClCompile Include="..\src\BasicLCD.cpp" />
     <ClCompile Include="..\src\ConcreteLCD.cpp" />
     <ClCompile Include="..\src\Cursor.cpp" />
-    <ClCompile Include="..\src\micholcd.cpp" />
     <ClCompile Include="..\src\Twitter\API_Request_err.cpp" />
     <ClCompile Include="..\src\Twitter\Tweet.cpp" />
     <ClCompile Include="..\src\Twitter\TwitterHandler.cpp" />
@@ -182,6 +181,7 @@
     <ClCompile Include="..\src\Imgui_string.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="allegro.cpp" />
+    <ClCompile Include="micholcd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="..\..\tp6\tp6\fuentemicho.TTF" />
