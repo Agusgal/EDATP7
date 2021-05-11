@@ -156,10 +156,8 @@
     <ClInclude Include="..\src\UserData.h" />
     <ClInclude Include="..\src\Error.h" />
     <ClInclude Include="..\src\Gui.h" />
-    <ClInclude Include="..\src\basicLCD.h" />
+    <ClInclude Include="..\src\BasicLCD.h" />
     <ClInclude Include="..\src\Imgui_string.h" />
-    <ClInclude Include="allegro.h" />
-    <ClInclude Include="micholcd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\ImGui\imgui.cpp" />
@@ -180,11 +178,8 @@
     <ClCompile Include="..\src\Gui.cpp" />
     <ClCompile Include="..\src\Imgui_string.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
-    <ClCompile Include="allegro.cpp" />
-    <ClCompile Include="micholcd.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\..\tp6\tp6\fuentemicho.TTF" />
     <Font Include="..\res\Fonts\courier.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

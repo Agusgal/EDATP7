@@ -1,32 +1,12 @@
 #pragma once
-#ifndef _BASICLCD_H
-#define _BASICLCD_H
 
-#include <iostream>
+#include "Error.h"
+#include "Cursor.h"
 
-
-struct cursorPosition
-{
-	int row;
-	int column;
-};
-enum errorcodes_t { OK = 0, INITERR };
-
-class lcdError
-{
-public:
-	lcdError(std::string errorname_, std::string errordescription_, unsigned long errorcode_);
-	std::string getErrorName();
-	std::string getErrorDescription();
-	unsigned long getErrorCode();
-private:
-	std::string errorname;
-	std::string errordesc;
-	unsigned long errorcode;
-};
 class basicLCD
 {
 public:
+
 	/*=====================================================
 	* Name: basicLCD
 	* Entra: -
@@ -36,14 +16,17 @@ public:
 	* cadd =1 (cursor address) (ver NOTA 1)
 	*=====================================================*/
 	basicLCD();
+
 	/*=====================================================
 	* Name: ~basicLCD
-	* Entra: -4/22
+	* Entra: -
+	4/22
 	* Resulta: Destructor de la clase. Libera cualquier recurso
 	* que se hubiera tomado de forma de evitar
 	* "resources leak".
 	*=====================================================*/
 	virtual ~basicLCD();
+
 	/*=====================================================
 	* Name: lcdInitOk
 	* Entra: -
@@ -53,6 +36,7 @@ public:
 	* en caso contrario.
 	*=====================================================*/
 	virtual bool lcdInitOk() = 0;
+
 	/*=====================================================
 	* Name: lcdGetError
 	* Entra: -
@@ -60,6 +44,8 @@ public:
 	* Devuelve en su nombre un lcdError&
 	*=====================================================*/
 	virtual lcdError& lcdGetError() = 0;
+
+
 	/*=====================================================
 	* Name: lcdClear
 	* Entra: -
@@ -69,6 +55,7 @@ public:
 	* en caso contrario.
 	*=====================================================*/
 	virtual bool lcdClear() = 0;
+
 	/*=====================================================
 	* Name: lcdClearToEOL
 	* Entra: -
@@ -79,6 +66,7 @@ public:
 	* en caso contrario.
 	*=====================================================*/
 	virtual bool lcdClearToEOL() = 0;
+
 	/*=====================================================
 	* Name: operator<<()
 	* Entra: Un carácter
@@ -92,7 +80,8 @@ public:
 	* basicLCD lcd;
 	* lcd << ‘a’ << ‘b’ << ‘c’;
 	*=====================================================*/
-	virtual basicLCD& operator<<(const unsigned char c) = 0;
+	virtual basicLCD& operator<<(const char c) = 0;
+
 	/*=====================================================
 	* Name: operator<<()
 	* Entra: Una cadena de caracteres NULL terminated
@@ -107,6 +96,7 @@ public:
 	* lcd << “Hola” << “ “ << “Mundo”;
 	*=====================================================*/
 	virtual basicLCD& operator<<(const char* c) = 0;
+
 	/*=====================================================
 	* Name: lcdMoveCursorUp
 	*
@@ -118,6 +108,7 @@ public:
 	* en caso contrario.
 	*=====================================================*/
 	virtual bool lcdMoveCursorUp() = 0;
+
 	/*=====================================================
 	* Name: lcdMoveCursorDown
 	*
@@ -129,6 +120,7 @@ public:
 	* en caso contrario.
 	*=====================================================*/
 	virtual bool lcdMoveCursorDown() = 0;
+
 	/*=====================================================
 	* Name: lcdMoveCursorRight
 	*
@@ -139,6 +131,7 @@ public:
 	* en caso contrario.
 	*=====================================================*/
 	virtual bool lcdMoveCursorRight() = 0;
+
 	/*=====================================================
 	* Name: lcdMoveCursorLeft
 	*
@@ -149,6 +142,7 @@ public:
 	* en caso contrario.
 	*=====================================================*/
 	virtual bool lcdMoveCursorLeft() = 0;
+
 	/*=====================================================
 	* Name: lcdSetCursorPosition
 	* Entra: Recibe una estructura tipo cursorPosition
@@ -160,6 +154,7 @@ public:
 	* en caso contrario.
 	*=====================================================*/
 	virtual bool lcdSetCursorPosition(const cursorPosition pos) = 0;
+
 	/*=====================================================
 	* Name: lcdGetCursorPosition
 	* Entra: -
@@ -169,7 +164,5 @@ public:
 	* Devuelve una estructura tipo cursorPosition
 	*=====================================================*/
 	virtual cursorPosition lcdGetCursorPosition() = 0;
+
 };
-
-
-#endif
