@@ -150,6 +150,7 @@
     <ClInclude Include="..\src\ConcreteLCD.h" />
     <ClInclude Include="..\src\Cursor.h" />
     <ClInclude Include="..\src\lcd3.h" />
+    <ClInclude Include="..\src\LCDB.h" />
     <ClInclude Include="..\src\Twitter\API_Request_err.h" />
     <ClInclude Include="..\src\Twitter\json.hpp" />
     <ClInclude Include="..\src\Twitter\Tweet.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="..\src\ConcreteLCD.cpp" />
     <ClCompile Include="..\src\Cursor.cpp" />
     <ClCompile Include="..\src\lcd3.cpp" />
+    <ClCompile Include="..\src\LCDB.cpp" />
     <ClCompile Include="..\src\Twitter\API_Request_err.cpp" />
     <ClCompile Include="..\src\Twitter\Tweet.cpp" />
     <ClCompile Include="..\src\Twitter\TwitterHandler.cpp" />

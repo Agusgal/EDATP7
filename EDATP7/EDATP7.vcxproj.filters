@@ -87,6 +87,9 @@
     <ClInclude Include="..\src\lcd3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\LCDB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\ImGui\imgui.cpp">
@@ -144,6 +147,9 @@
       <Filter>Source Files\Twitter</Filter>
     </ClCompile>
     <ClCompile Include="..\src\lcd3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LCDB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

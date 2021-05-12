@@ -15,6 +15,7 @@
 #include "BasicLCD.h"
 #include "ConcreteLCD.h"
 #include "lcd3.h"
+#include "LCDB.h"
 
 #include "Imgui_string.h"
 
